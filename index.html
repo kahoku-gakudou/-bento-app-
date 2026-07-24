@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>学童弁当注文</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        .btn {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #date {
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>学童弁当注文ページ</h2>
+
+    <div id="date"></div>
+
+    <a class="btn" href="menu.html">メニューを見る</a>
+    <a class="btn" href="allergy.html">原材料を見る</a>
+    <a class="btn" href="order.html">注文する</a>
+
+    <script>
+        // 今日の日付を表示
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = today.getMonth() + 1;
+        const d = today.getDate();
+        document.getElementById("date").innerText = `今日の日付：${y}年${m}月${d}日`;
+    </script>
+
+</body>
+</html>
