@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>今日のメニュー</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        .menu-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .btn {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>今日のメニュー</h2>
+
+    <div id="menu" class="menu-box">
+        <h3 id="menu-name">メニュー名：未設定</h3>
+        <p id="menu-desc">説明：未設定</p>
+    </div>
+
+    <a class="btn" href="allergy.html">原材料を見る</a>
+    <a class="btn" href="order.html">注文する</a>
+    <a class="btn" href="index.html">トップに戻る</a>
+
+    <script>
+        // ★ ここに毎日のメニューを設定する（後であなたが編集できる）
+        const todayMenu = {
+            name: "唐揚げ弁当",
+            desc: "人気の唐揚げと副菜のセットです。"
+        };
+
+        document.getElementById("menu-name").innerText = `メニュー名：${todayMenu.name}`;
+        document.getElementById("menu-desc").innerText = `説明：${todayMenu.desc}`;
+    </script>
+
+</body>
+</html>
