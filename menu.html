@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>今日のメニュー</title>
+    <title>メニュー選択</title>
     <style>
         body {
             font-family: sans-serif;
@@ -37,34 +37,49 @@
         .item {
             margin-bottom: 20px;
         }
+        .date-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #2196F3;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .date-btn:hover {
+            background: #1976D2;
+        }
     </style>
 </head>
 
 <body>
 
-<h2>今日のメニュー</h2>
+<h2>日付を選んでメニューを見る</h2>
 
-<!-- ★ここにメニューが自動で表示される -->
+<!-- ★カレンダー（日付ボタン） -->
+<div>
+    <span class="date-btn" onclick="showMenu('2026-07-27')">7月27日</span>
+    <span class="date-btn" onclick="showMenu('2026-07-28')">7月28日</span>
+    <span class="date-btn" onclick="showMenu('2026-07-29')">7月29日</span>
+    <span class="date-btn" onclick="showMenu('2026-07-30')">7月30日</span>
+</div>
+
+<!-- ★ここにメニューが表示される -->
 <div id="menu"></div>
 
-<!-- トップページに戻るボタン -->
 <a class="btn" href="index.html">トップに戻る</a>
 
-<!-- Google Sheets 読み込みコード（index.html と同じ仕組み） -->
 <script>
-// Google Sheets の公開URL（あなたのシート）
+// Google Sheets の公開URL
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q-HUX6uJrj6Wu8l_6d5ovTWHF-yTTYsaLzihLMO6AIw/export?format=csv";
-
 
 // CSVを読み込む
 async function loadMenu() {
     const response = await fetch(SHEET_URL);
     const csvText = await response.text();
     const rows = csvText.split("\n").map(r => r.split(","));
-
     const header = rows[0];
     const data = rows.slice(1);
-
     return { header, data };
 }
 
@@ -90,7 +105,7 @@ function displayMenu(row, header) {
 
         if (!name || name.trim() === "") continue;
 
-        const itemHTML = `
+        container.innerHTML += `
             <div class="item">
                 <h3>${name}</h3>
                 <p><strong>原材料：</strong> ${ingredients}</p>
@@ -98,23 +113,15 @@ function displayMenu(row, header) {
             </div>
             <hr>
         `;
-        container.innerHTML += itemHTML;
     }
 }
 
-// 今日の日付を自動で読み込む（例：2026-07-28）
-const today = new Date();
-const y = today.getFullYear();
-const m = String(today.getMonth() + 1).padStart(2, "0");
-const d = String(today.getDate()).padStart(2, "0");
-const todayStr = `${y}-${m}-${d}`;
-
-// 今日のメニューを表示
-(async () => {
+// ★ カレンダーで押した日付のメニューを表示
+async function showMenu(date) {
     const { header, data } = await loadMenu();
-    const row = findMenuByDate(data, todayStr);
+    const row = findMenuByDate(data, date);
     displayMenu(row, header);
-})();
+}
 </script>
 
 </body>
