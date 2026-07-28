@@ -47,6 +47,65 @@
         const d = today.getDate();
         document.getElementById("date").innerText = `今日の日付：${y}年${m}月${d}日`;
     </script>
+<script>
+// Google Sheets の公開URL（あなたのシート）
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q-HUX6uJrj6Wu8l_6d5ovTWHF-yTTYsaLzihLMO6AIw/export?format=csv";
+
+// CSVを読み込む
+async function loadMenu() {
+    const response = await fetch(SHEET_URL);
+    const csvText = await response.text();
+    const rows = csvText.split("\n").map(r => r.split(","));
+
+    // 1行目はヘッダー
+    const header = rows[0];
+    const data = rows.slice(1);
+
+    return { header, data };
+}
+
+// 日付で行を探す
+function findMenuByDate(data, date) {
+    return data.find(row => row[0] === date); // date列は0番目
+}
+
+// メニューを表示する
+function displayMenu(row, header) {
+    const container = document.getElementById("menu");
+    container.innerHTML = "";
+
+    if (!row) {
+        container.innerHTML = "<p>この日のメニューは登録されていません。</p>";
+        return;
+    }
+
+    // item1〜item5 を順番に表示
+    for (let i = 1; i < header.length; i += 3) {
+        const name = row[i];
+        const ingredients = row[i + 1];
+        const allergy = row[i + 2];
+
+        if (name.trim() === "") continue; // 空欄はスキップ
+
+        const itemHTML = `
+            <div class="item">
+                <h3>${name}</h3>
+                <p><strong>原材料：</strong> ${ingredients}</p>
+                <p><strong>アレルギー：</strong> ${allergy}</p>
+            </div>
+            <hr>
+        `;
+        container.innerHTML += itemHTML;
+    }
+}
+
+// カレンダーで日付を押したとき
+async function showMenu(date) {
+    const { header, data } = await loadMenu();
+    const row = findMenuByDate(data, date);
+    displayMenu(row, header);
+}
+</script>
 
 </body>
 </html>
