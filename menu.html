@@ -2,27 +2,42 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メニュー選択</title>
+    <title>メニューカレンダー</title>
     <style>
         body {
             font-family: sans-serif;
             text-align: center;
             padding: 30px;
         }
-        .btn {
-            display: block;
-            width: 80%;
-            margin: 15px auto;
-            padding: 15px;
-            background-color: #4CAF50;
+
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7列（カレンダー） */
+            gap: 10px;
+            margin: 20px auto;
+            width: 90%;
+        }
+
+        .date-btn {
+            padding: 10px;
+            background: #2196F3;
             color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 20px;
+            border-radius: 6px;
+            cursor: pointer;
         }
-        .btn:hover {
-            background-color: #45a049;
+
+        .date-btn:hover {
+            background: #1976D2;
         }
+
+        .no-menu {
+            padding: 10px;
+            background: #ccc;
+            color: #666;
+            border-radius: 6px;
+            cursor: default;
+        }
+
         #menu {
             margin-top: 20px;
             text-align: left;
@@ -34,35 +49,31 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .item {
             margin-bottom: 20px;
         }
-        .date-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            background: #2196F3;
+
+        .btn {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            background-color: #4CAF50;
             color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .date-btn:hover {
-            background: #1976D2;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
         }
     </style>
 </head>
 
 <body>
 
-<h2>日付を選んでメニューを見る</h2>
+<h2>メニューカレンダー</h2>
 
-<!-- ★カレンダー（日付ボタン） -->
-<div>
-    <span class="date-btn" onclick="showMenu('2026-07-27')">7月27日</span>
-    <span class="date-btn" onclick="showMenu('2026-07-28')">7月28日</span>
-    <span class="date-btn" onclick="showMenu('2026-07-29')">7月29日</span>
-    <span class="date-btn" onclick="showMenu('2026-07-30')">7月30日</span>
-</div>
+<!-- ★ここにカレンダーが自動生成される -->
+<div id="calendar"></div>
 
 <!-- ★ここにメニューが表示される -->
 <div id="menu"></div>
@@ -116,12 +127,44 @@ function displayMenu(row, header) {
     }
 }
 
-// ★ カレンダーで押した日付のメニューを表示
+// ★ カレンダーを自動生成（複数月対応）
+async function generateCalendar() {
+    const { header, data } = await loadMenu();
+    const calendar = document.getElementById("calendar");
+
+    calendar.innerHTML = ""; // 初期化
+
+    data.forEach(row => {
+        const date = row[0]; // 例：2026-07-28
+        if (!date || date.trim() === "") return;
+
+        const jpDate = date.replace(/-/g, "/");
+
+        const hasMenu = row.slice(1).some(v => v.trim() !== "");
+
+        const btn = document.createElement("div");
+
+        if (hasMenu) {
+            btn.className = "date-btn";
+            btn.onclick = () => showMenu(date);
+        } else {
+            btn.className = "no-menu"; // メニューなしはグレー
+        }
+
+        btn.innerText = jpDate;
+        calendar.appendChild(btn);
+    });
+}
+
+// ★ ボタンを押した日付のメニューを表示
 async function showMenu(date) {
     const { header, data } = await loadMenu();
     const row = findMenuByDate(data, date);
     displayMenu(row, header);
 }
+
+// ページ読み込み時にカレンダー生成
+generateCalendar();
 </script>
 
 </body>
