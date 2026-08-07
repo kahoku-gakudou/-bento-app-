@@ -8,34 +8,51 @@
             font-family: sans-serif;
             text-align: center;
             padding: 30px;
+            background-color: #F7FBFF;
         }
 
-        #calendar {
+        .month-title {
+            font-size: 24px;
+            margin-top: 40px;
+            color: #2C786C;
+        }
+
+        .calendar {
             display: grid;
-            grid-template-columns: repeat(7, 1fr); /* 7列（カレンダー） */
+            grid-template-columns: repeat(7, 1fr);
             gap: 10px;
             margin: 20px auto;
             width: 90%;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .weekday {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .date-cell {
+            padding: 10px;
+            border-radius: 6px;
+            min-height: 50px;
         }
 
         .date-btn {
-            padding: 10px;
             background: #2196F3;
             color: white;
-            border-radius: 6px;
             cursor: pointer;
-        }
-
-        .date-btn:hover {
-            background: #1976D2;
+            padding: 10px;
+            border-radius: 6px;
         }
 
         .no-menu {
-            padding: 10px;
             background: #ccc;
             color: #666;
+            padding: 10px;
             border-radius: 6px;
-            cursor: default;
         }
 
         #menu {
@@ -59,7 +76,7 @@
             width: 80%;
             margin: 15px auto;
             padding: 15px;
-            background-color: #4CAF50;
+            background-color: #5FD068;
             color: white;
             text-decoration: none;
             border-radius: 8px;
@@ -72,19 +89,15 @@
 
 <h2>メニューカレンダー</h2>
 
-<!-- ★ここにカレンダーが自動生成される -->
-<div id="calendar"></div>
+<div id="calendar-container"></div>
 
-<!-- ★ここにメニューが表示される -->
 <div id="menu"></div>
 
 <a class="btn" href="index.html">トップに戻る</a>
 
 <script>
-// Google Sheets の公開URL
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q-HUX6uJrj6Wu8l_6d5ovTWHF-yTTYsaLzihLMO6AIw/export?format=csv";
 
-// CSVを読み込む
 async function loadMenu() {
     const response = await fetch(SHEET_URL);
     const csvText = await response.text();
@@ -94,12 +107,10 @@ async function loadMenu() {
     return { header, data };
 }
 
-// 日付で行を探す
 function findMenuByDate(data, date) {
     return data.find(row => row[0] === date);
 }
 
-// メニューを表示する
 function displayMenu(row, header) {
     const container = document.getElementById("menu");
     container.innerHTML = "";
@@ -127,44 +138,83 @@ function displayMenu(row, header) {
     }
 }
 
-// ★ カレンダーを自動生成（複数月対応）
-async function generateCalendar() {
+async function generateRealCalendar() {
     const { header, data } = await loadMenu();
-    const calendar = document.getElementById("calendar");
+    const container = document.getElementById("calendar-container");
 
-    calendar.innerHTML = ""; // 初期化
+    const grouped = {};
 
     data.forEach(row => {
-        const date = row[0]; // 例：2026-07-28
+        const date = row[0];
         if (!date || date.trim() === "") return;
 
-        const jpDate = date.replace(/-/g, "/");
+        const [year, month, day] = date.split("-");
+        const key = `${year}-${month}`;
 
-        const hasMenu = row.slice(1).some(v => v.trim() !== "");
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push({ date, day: Number(day), row });
+    });
 
-        const btn = document.createElement("div");
+    Object.keys(grouped).forEach(monthKey => {
+        const [year, month] = monthKey.split("-");
+        const monthTitle = document.createElement("h3");
+        monthTitle.className = "month-title";
+        monthTitle.innerText = `${year}年${Number(month)}月`;
+        container.appendChild(monthTitle);
 
-        if (hasMenu) {
-            btn.className = "date-btn";
-            btn.onclick = () => showMenu(date);
-        } else {
-            btn.className = "no-menu"; // メニューなしはグレー
+        const calendar = document.createElement("div");
+        calendar.className = "calendar";
+
+        const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+        weekdays.forEach(w => {
+            const cell = document.createElement("div");
+            cell.className = "weekday";
+            cell.innerText = w;
+            calendar.appendChild(cell);
+        });
+
+        const firstDate = new Date(`${monthKey}-01`);
+        const startDay = firstDate.getDay();
+
+        for (let i = 0; i < startDay; i++) {
+            const empty = document.createElement("div");
+            empty.className = "date-cell";
+            calendar.appendChild(empty);
         }
 
-        btn.innerText = jpDate;
-        calendar.appendChild(btn);
+        grouped[monthKey].forEach(item => {
+            const cell = document.createElement("div");
+            cell.className = "date-cell";
+
+            const hasMenu = item.row.slice(1).some(v => v.trim() !== "");
+
+            if (hasMenu) {
+                const btn = document.createElement("div");
+                btn.className = "date-btn";
+                btn.innerText = item.day;
+                btn.onclick = () => showMenu(item.date);
+                cell.appendChild(btn);
+            } else {
+                const btn = document.createElement("div");
+                btn.className = "no-menu";
+                btn.innerText = item.day;
+                cell.appendChild(btn);
+            }
+
+            calendar.appendChild(cell);
+        });
+
+        container.appendChild(calendar);
     });
 }
 
-// ★ ボタンを押した日付のメニューを表示
 async function showMenu(date) {
     const { header, data } = await loadMenu();
     const row = findMenuByDate(data, date);
     displayMenu(row, header);
 }
 
-// ページ読み込み時にカレンダー生成
-generateCalendar();
+generateRealCalendar();
 </script>
 
 </body>
