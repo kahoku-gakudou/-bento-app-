@@ -2,109 +2,47 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>学童弁当注文</title>
+    <title>学童弁当注文ページ</title>
     <style>
         body {
-            font-family: sans-serif;
+            background-color: #E8F6EF; /* さわやかな薄いグリーン */
+            font-family: 'Rounded M+ 1c', sans-serif;
             text-align: center;
             padding: 30px;
+        }
+        h2 {
+            color: #2C786C; /* 落ち着いたグリーン */
         }
         .btn {
             display: block;
             width: 80%;
             margin: 15px auto;
             padding: 15px;
-            background-color: #4CAF50;
+            background-color: #5FD068; /* 明るいグリーン */
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-size: 20px;
         }
         .btn:hover {
-            background-color: #45a049;
-        }
-        #date {
-            font-size: 22px;
-            margin-bottom: 30px;
+            background-color: #4CAF50;
         }
     </style>
 </head>
+
 <body>
 
-    <h2>学童弁当注文ページ</h2>
+<h2>学童弁当注文ページ</h2>
 
-    <div id="date"></div>
+<!-- ★お弁当画像（GitHubにアップした画像名に変更してOK） -->
+<img src="bento.png" alt="お弁当の画像"
+     style="width:80%; max-width:400px; margin:20px auto; display:block;
+            border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
 
-    <a class="btn" href="menu.html">メニューを見る</a>
-    <a class="btn" href="order.html">注文する</a>
+<p>今日の日付：2026年7月28日</p>
 
-    <script>
-        // 今日の日付を表示
-        const today = new Date();
-        const y = today.getFullYear();
-        const m = today.getMonth() + 1;
-        const d = today.getDate();
-        document.getElementById("date").innerText = `今日の日付：${y}年${m}月${d}日`;
-    </script>
-<script>
-// Google Sheets の公開URL（あなたのシート）
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q-HUX6uJrj6Wu8l_6d5ovTWHF-yTTYsaLzihLMO6AIw/export?format=csv";
-
-// CSVを読み込む
-async function loadMenu() {
-    const response = await fetch(SHEET_URL);
-    const csvText = await response.text();
-    const rows = csvText.split("\n").map(r => r.split(","));
-
-    // 1行目はヘッダー
-    const header = rows[0];
-    const data = rows.slice(1);
-
-    return { header, data };
-}
-
-// 日付で行を探す
-function findMenuByDate(data, date) {
-    return data.find(row => row[0] === date); // date列は0番目
-}
-
-// メニューを表示する
-function displayMenu(row, header) {
-    const container = document.getElementById("menu");
-    container.innerHTML = "";
-
-    if (!row) {
-        container.innerHTML = "<p>この日のメニューは登録されていません。</p>";
-        return;
-    }
-
-    // item1〜item5 を順番に表示
-    for (let i = 1; i < header.length; i += 3) {
-        const name = row[i];
-        const ingredients = row[i + 1];
-        const allergy = row[i + 2];
-
-        if (name.trim() === "") continue; // 空欄はスキップ
-
-        const itemHTML = `
-            <div class="item">
-                <h3>${name}</h3>
-                <p><strong>原材料：</strong> ${ingredients}</p>
-                <p><strong>アレルギー：</strong> ${allergy}</p>
-            </div>
-            <hr>
-        `;
-        container.innerHTML += itemHTML;
-    }
-}
-
-// カレンダーで日付を押したとき
-async function showMenu(date) {
-    const { header, data } = await loadMenu();
-    const row = findMenuByDate(data, date);
-    displayMenu(row, header);
-}
-</script>
+<a class="btn" href="menu.html">メニューを見る</a>
+<a class="btn" href="order.html">注文する</a>
 
 </body>
 </html>
