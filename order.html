@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文画面</title>
+    <style>
+        body {
+            background-color: #F7FBFF;
+            font-family: 'Rounded M+ 1c', sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .form-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 90%;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .radio-group {
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: block;
+            width: 80%;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #5FD068;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>注文画面</h2>
+
+<!-- ★選んだ日付を表示する場所 -->
+<h3 id="orderDate" style="color:#2C786C;"></h3>
+
+<div class="form-box">
+
+    <label>児童名</label>
+    <input type="text" id="childName" placeholder="児童名を入力">
+
+    <label>学童名</label>
+    <select id="school">
+        <option value="">選択してください</option>
+        <option value="A学童">A学童</option>
+        <option value="B学童">B学童</option>
+        <option value="C学童">C学童</option>
+    </select>
+
+    <label>クラス</label>
+    <select id="class">
+        <option value="">選択してください</option>
+        <option value="1年">1年</option>
+        <option value="2年">2年</option>
+        <option value="3年">3年</option>
+        <option value="4年">4年</option>
+        <option value="5年">5年</option>
+        <option value="6年">6年</option>
+    </select>
+
+    <label>量の選択</label>
+    <div class="radio-group">
+        <input type="radio" name="size" value="普通" checked> 普通  
+        <input type="radio" name="size" value="大盛り"> 大盛り
+    </div>
+
+    <a class="btn" href="#" onclick="confirmOrder()">注文内容を確認する</a>
+
+</div>
+
+<script>
+// ★ URL の ?date=2026-07-28 を読み取る
+const params = new URLSearchParams(window.location.search);
+const date = params.get("date");
+
+// ★ 日付を画面に表示
+if (date) {
+    const [y, m, d] = date.split("-");
+    document.getElementById("orderDate").innerText = `注文日：${y}年${Number(m)}月${Number(d)}日`;
+}
+
+function confirmOrder() {
+    const name = document.getElementById("childName").value;
+    const school = document.getElementById("school").value;
+    const className = document.getElementById("class").value;
+    const size = document.querySelector('input[name="size"]:checked').value;
+
+    if (!name || !school || !className) {
+        alert("未入力の項目があります。すべて入力してください。");
+        return;
+    }
+
+    alert(
+        "注文内容\n\n" +
+        "注文日： " + date + "\n" +
+        "児童名： " + name + "\n" +
+        "学童名： " + school + "\n" +
+        "クラス： " + className + "\n" +
+        "量： " + size + "\n\n" +
+        "この内容で注文しますか？"
+    );
+}
+</script>
+
+<a class="btn" href="index.html">トップに戻る</a>
+
+</body>
+</html>
