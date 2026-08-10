@@ -93,6 +93,9 @@
 
 <div id="menu"></div>
 
+<!-- ★注文ボタン（最初は非表示） -->
+<a id="orderBtn" class="btn" href="#" style="display:none;">注文する</a>
+
 <a class="btn" href="index.html">トップに戻る</a>
 
 <script>
@@ -113,10 +116,13 @@ function findMenuByDate(data, date) {
 
 function displayMenu(row, header) {
     const container = document.getElementById("menu");
+    const orderBtn = document.getElementById("orderBtn");
+
     container.innerHTML = "";
 
     if (!row) {
         container.innerHTML = "<p>この日のメニューは登録されていません。</p>";
+        orderBtn.style.display = "none";
         return;
     }
 
@@ -136,6 +142,12 @@ function displayMenu(row, header) {
             <hr>
         `;
     }
+
+    // ★注文ボタンを表示
+    orderBtn.style.display = "block";
+
+    // ★注文画面に日付を渡す
+    orderBtn.href = `order.html?date=${row[0]}`;
 }
 
 async function generateRealCalendar() {
