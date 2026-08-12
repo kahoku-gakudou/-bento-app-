@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>注文画面</title>
+  <title>学童弁当注文アプリ</title>
   <style>
     body {
       background-color: #F7FBFF;
@@ -10,78 +10,33 @@
       padding: 20px;
       text-align: center;
     }
-    input, select, button {
-      margin: 8px;
-      padding: 8px;
-      font-size: 16px;
+    a.button {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 18px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h2>学童弁当注文フォーム</h2>
+  <!-- トップ画像 -->
+  <img src="https://kahoku-gakudou.github.io/-bento-app-/images/120702.jpg"
+       alt="トップ画像"
+       style="width:100%; max-width:600px; margin-bottom:20px;">
 
-  <label>日付: <input type="date" id="date"></label><br>
-  <label>児童名: <input type="text" id="childName"></label><br>
+  <h2>学童弁当注文アプリ</h2>
 
-  <label>学童名:
-    <select id="school">
-      <option value="南">南</option>
-      <option value="北">北</option>
-      <option value="中央">中央</option>
-    </select>
-  </label><br>
+  <a class="button" href="order.html">注文画面へ</a>
 
-  <label>学年:
-    <select id="className">
-      <option value="1年">1年</option>
-      <option value="2年">2年</option>
-      <option value="3年">3年</option>
-      <option value="4年">4年</option>
-      <option value="5年">5年</option>
-      <option value="6年">6年</option>
-    </select>
-  </label><br>
-
-  <label>サイズ:
-    <select id="size">
-      <option value="普通">普通</option>
-      <option value="大">大</option>
-      <option value="小">小</option>
-    </select>
-  </label><br>
-
-  <button onclick="confirmOrder()">注文する</button>
-
-  <!-- ロゴ画像 -->
+  <!-- ロゴ（トップ画面の下） -->
   <img src="https://kahoku-gakudou.github.io/-bento-app-/images/河北食品ロゴうぉオレンジ.png"
        alt="ロゴ"
-       style="width:150px; margin-top:20px;">
-
-  <script>
-    function confirmOrder() {
-      const data = {
-        date: document.getElementById("date").value,
-        childName: document.getElementById("childName").value,
-        school: document.getElementById("school").value,
-        className: document.getElementById("className").value,
-        size: document.getElementById("size").value
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbxetJWAmZ3SDnMF22teBaijLF8m12q4hbnioe3xssO1Ee9ksj-1FEwlOXOkQvvs7Ab52w/exec", {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(result => {
-        alert("注文を送信しました！");
-      })
-      .catch(error => {
-        alert("送信エラーが発生しました");
-        console.error(error);
-      });
-    }
-  </script>
+       style="width:150px; margin-top:30px;">
 
 </body>
 </html>
