@@ -1,30 +1,68 @@
-<script>
-function confirmOrder() {
-  const date = document.getElementById("date").value;
-  const childName = document.getElementById("childName").value;
-  const school = document.getElementById("school").value;
-  const className = document.getElementById("className").value;
-  const size = document.getElementById("size").value;
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>注文画面</title>
+  <style>
+    body {
+      background-color: #F7FBFF;
+      font-family: 'Rounded M+ 1c', sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    input, select, button {
+      margin: 8px;
+      padding: 8px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>学童弁当注文フォーム</h2>
 
-  const data = {
-    date: date,
-    childName: childName,
-    school: school,
-    className: className,
-    size: size
-  };
+  <label>日付: <input type="date" id="date"></label><br>
+  <label>児童名: <input type="text" id="childName"></label><br>
+  <label>学童名: <input type="text" id="school"></label><br>
+  <label>クラス: <input type="text" id="className"></label><br>
+  <label>サイズ:
+    <select id="size">
+      <option value="普通">普通</option>
+      <option value="大">大</option>
+      <option value="小">小</option>
+    </select>
+  </label><br>
 
-  fetch("https://script.google.com/macros/s/AKfycbzlLkqJXT6kWglKftZF4Mu08tM-9wvSX1YKJbhAt/exec", {
-    method: "POST",
-    body: JSON.stringify(data)
-  })
-  .then(response => response.text())
-  .then(result => {
-    alert("注文を送信しました！");
-  })
-  .catch(error => {
-    alert("送信エラーが発生しました");
-    console.error(error);
-  });
-}
-</script>
+  <button onclick="confirmOrder()">注文する</button>
+
+  <script>
+    function confirmOrder() {
+      const date = document.getElementById("date").value;
+      const childName = document.getElementById("childName").value;
+      const school = document.getElementById("school").value;
+      const className = document.getElementById("className").value;
+      const size = document.getElementById("size").value;
+
+      const data = {
+        date: date,
+        childName: childName,
+        school: school,
+        className: className,
+        size: size
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbzlLkqJXT6kWglKftZF4Mu08tM-9wvSX1YKJbhAt/exec", {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(result => {
+        alert("注文を送信しました！");
+      })
+      .catch(error => {
+        alert("送信エラーが発生しました");
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>
