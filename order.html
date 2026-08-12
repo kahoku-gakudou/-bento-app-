@@ -15,15 +15,44 @@
       padding: 8px;
       font-size: 16px;
     }
+    a.back {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 16px;
+      background-color: #888;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
+
   <h2>学童弁当注文フォーム</h2>
 
   <label>日付: <input type="date" id="date"></label><br>
   <label>児童名: <input type="text" id="childName"></label><br>
-  <label>学童名: <input type="text" id="school"></label><br>
-  <label>クラス: <input type="text" id="className"></label><br>
+
+  <label>学童名:
+    <select id="school">
+      <option value="南">南</option>
+      <option value="北">北</option>
+      <option value="中央">中央</option>
+    </select>
+  </label><br>
+
+  <label>学年:
+    <select id="className">
+      <option value="1年">1年</option>
+      <option value="2年">2年</option>
+      <option value="3年">3年</option>
+      <option value="4年">4年</option>
+      <option value="5年">5年</option>
+      <option value="6年">6年</option>
+    </select>
+  </label><br>
+
   <label>サイズ:
     <select id="size">
       <option value="普通">普通</option>
@@ -34,20 +63,18 @@
 
   <button onclick="confirmOrder()">注文する</button>
 
+  <!-- トップへ戻るボタン -->
+  <br>
+  <a class="back" href="index.html">トップへ戻る</a>
+
   <script>
     function confirmOrder() {
-      const date = document.getElementById("date").value;
-      const childName = document.getElementById("childName").value;
-      const school = document.getElementById("school").value;
-      const className = document.getElementById("className").value;
-      const size = document.getElementById("size").value;
-
       const data = {
-        date: date,
-        childName: childName,
-        school: school,
-        className: className,
-        size: size
+        date: document.getElementById("date").value,
+        childName: document.getElementById("childName").value,
+        school: document.getElementById("school").value,
+        className: document.getElementById("className").value,
+        size: document.getElementById("size").value
       };
 
       fetch("https://script.google.com/macros/s/AKfycbxetJWAmZ3SDnMF22teBaijLF8m12q4hbnioe3xssO1Ee9ksj-1FEwlOXOkQvvs7Ab52w/exec", {
@@ -64,5 +91,6 @@
       });
     }
   </script>
+
 </body>
 </html>
